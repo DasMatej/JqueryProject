@@ -1,0 +1,188 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Emit Site</title>
+    <script src="jquery/jquery.js"></script>
+    <script src="jquery/jquery-ui.js"></script>        
+    <script type="text/javascript" src="JS.js"></script>
+    <script type="text/javascript" src="persons.js"></script>   
+    <script type="text/javascript" src="dropdown-models.js"></script>
+     
+    <script> 
+
+        // Sorting of persons
+        function orderPersons(persons, prop) 
+        {
+            var sortedPersons;
+
+            switch (prop) 
+            {
+                case "Name":                   
+                    sortedPersons = persons.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                    break;
+                case "Age": 
+                    sortedPersons = persons.sort((a, b) => (a.age > b.age) ? 1 : -1);
+                    break;
+                default:
+                    console.log("invalid prop");
+            }
+            return sortedPersons;
+        }
+
+        //main setup
+        $(document).ready(function ()
+        {
+            //sort by
+            dropdownSearchItemModels.forEach(x => $(".custom-select").append(`<option selected=\"0\" value=\"${ x.Id }\">${ x.SearchType }</option>`));
+            $(".custom-select").change(function() 
+            {
+                var searchTypeId = $(this).val();
+                var option = dropdownSearchItemModels.find(x => x.Id == searchTypeId);
+                var selectedSearchType = option.SearchType;
+                var orderedPersons = orderPersons(persons, selectedSearchType);
+
+                $(".person-list").html("");
+                
+                // appending ordered persons one by one in the list
+                orderedPersons.forEach(person => $(".person-list").append(`<li class=\"person-item\" value=\"${ person.Id }\"><img style=\"border-radius: 5px 20px 5px;\" src=\"${ person.ProfileImage }\">${ person.name } ${ person.age }</a></li>`));
+            });
+
+            // show initial list of users
+            persons.forEach(person => $(".person-list").append(`<li class=\"person-item\" value=\"${ person.Id }\"><img style=\"border-radius: 5px 20px 5px;\" src=\"${ person.ProfileImage }\">${ person.name } ${ person.age }</a></li>`));
+
+            // on click show profile details
+            $(document).on("click", ".person-item", function() 
+            {
+                // refresh page with the new list
+                $("#person-details").html("");
+               
+                // find the first person after filter
+                var person = persons.find(x => x.Id == $(this).val());
+
+                // append person in person details screen
+                $("#person-details").append(
+                    `  
+                     <h1 class=\"header\">${ person.name }<button type="button" class="btn btn-light" style="margin-left: 20px" >Edit</button></h1><br>
+                     <div class="row">
+                     <div class="col-5"><img style="width: 250px; height: 250px;" src=\"${ person.ProfileImage }"\></div>
+                     <div class="col"><h1 class=\"header\">${ person.age }</h1></div>
+                     </div>
+                    `
+                );
+
+                // show the schedule
+                person.Schedule.forEach(x => $("#person-details").append(
+                    `<h5 style=\"border-left: solid 10px orange;\">${ x.Day } ${ x.Status }</h5>`
+                ));
+            });
+            
+            // search on key pres
+            $("#search").on("keyup", function() 
+            {
+                var searchString = ($(this).val()).toLowerCase();
+                
+                // filter the people by the substring (searchString)
+                var filteredPersons = persons.filter(x => x.name.toLowerCase().indexOf(searchString) >= 0);
+
+                $(".person-list").html("");
+
+                // fill list with filtered persons
+                filteredPersons.forEach(person => $(".person-list").append(`<li class=\"person-item\" value=\"${ person.Id }\"><img style=\"border-radius: 5px 20px 5px;\" src=\"${ person.ProfileImage }\">${ person.name } ${ person.age }</a></li>`));
+            });
+        })
+     
+    </script>
+    
+</head>
+
+<body>
+        <!--Header-->
+        <div class="header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+              <h1 class="navbar-brand" href="#" style="cursor: pointer;">TakeLessons</h1>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                </ul>         
+                    <button class='fas fa-bullhorn btn-secondary'>
+                    </button>
+                    <select class="Test">
+                            <option> Jason H </option>
+                            <option> My Profile </option>
+                            <option> Settings </option>
+                            <option> Logout </option>
+                            <option> Security</option>
+                    </select>
+                
+              </div>
+            </nav>
+        </div>
+
+        <!--Dashboard-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-primary">
+                  <input type="checkbox" checked="" autocomplete="off"> Dashboard
+                </label>
+                <label class="btn btn-primary">
+                  <input type="checkbox" autocomplete="off"> Calendar
+                </label>
+                <label class="btn btn-primary Active">
+                  <input type="checkbox" autocomplete="off"> Clients
+                </label>
+                <label class="btn btn-primary">
+                    <input type="checkbox" autocomplete="off"> Finances
+                  </label>
+              </div>
+        </nav>
+        </div>
+
+        <!--Container-->
+        <div class="container-1">
+
+            <!--Left SIde-->
+            <div class="side">
+
+                <!--New Contact-->
+                <div class="new-contact">
+                    <button class="btn btn-success" onclick="newContact()">+ New Contact</button>
+                </div>
+
+                <!--Search-->
+                <div class="form-control">
+                    <input type="text" placeholder="ie. client's name" id="search">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </div>
+
+                <!--Sort By-->
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label class="col-form-label"><strong>Sort By: </strong></label>
+                        <select class="custom-select" id="list">
+                        </select>   
+                    </div>
+                </form>
+                
+                <!--List Of People-->
+                <div class="list-of-people">
+                    <nav>
+                        <ul id="myUL" class ="person-list">
+                        </ul>
+                    </nav>
+                </div>
+
+            <!--Main-->    
+            </div>
+                <div class="main" style="border: 5px solid green;">     
+                    <div class=""  id="person-details">
+                </div>
+            </div>
+        </div>
+</body>
+</html>

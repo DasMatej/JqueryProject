@@ -1,0 +1,55 @@
+.container-1{
+    display: flex;
+    flex-wrap: wrap;
+    background-color: thistle;
+    width: 100%;
+}
+.side{
+    flex: 30%;
+    background-color: whitesmoke;
+    padding: 20px;
+}
+.main{
+    flex:65%;
+    background-color: white;
+    padding: 20px;
+}
+.form-control{
+    margin: 10px;
+}
+.form-control button {
+    background: #ddd;
+    font-size: 21px;
+    border: none;
+    cursor: pointer;
+  }
+.form-control button:hover {
+    background: #ccc;
+  }
+ .new-contact{
+     display: flex;
+     justify-content: space-around;
+ }
+ .new-contact button{
+     
+     padding-left: 50px;
+     padding-right: 50px;
+ }
+ .list-of-people img{
+    width: 50px;
+ }
+ .list-of-people ul{
+    list-style: none;
+    overflow-y:scroll;
+    height:400px;   
+ }
+ .form-group{
+     display: flex;
+     width: 75%;
+     margin: auto;
+ }
+ li {
+     cursor: pointer;
+ }
+ 
+
